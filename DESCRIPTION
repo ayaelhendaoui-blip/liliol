@@ -1,25 +1,42 @@
 Package: agroSAR
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Analyse des données radar Sentinel-1 pour le suivi agricole
+Version: 0.1.0
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+    person(
+      given  = "Aya",
+      family = "El Hendaoui",
+      role   = c("aut", "cre"),
+      email  = "aya.elhendaoui@iav.ac.ma"
+    )
+Description: Package R permettant d'importer des images radar Sentinel-1,
+    d'analyser les signaux VV/VH, d'estimer l'humidité du sol via SoilGrids,
+    de suivre l'évolution des cultures et de produire des cartes agricoles.
+    Les données sont récupérées depuis l'API STAC Copernicus (Sentinel-1)
+    et l'API ISRIC SoilGrids pour l'humidité du sol.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 8.0.0
-Imports: 
-    dplyr,
-    ggplot2,
-    httr2,
-    plotly,
-    rstac,
-    sf,
+RoxygenNote: 7.3.1
+URL: https://github.com/ayaelhendaoui-blip/agroSAR
+BugReports: https://github.com/ayaelhendaoui-blip/agroSAR/issues
+Depends:
+    R (>= 4.1.0)
+Imports:
     terra,
-    tmap
-Suggests: 
+    sf,
+    rstac,
+    httr2,
+    dplyr,
+    tidyr,
+    ggplot2,
+    plotly,
+    tmap,
+    leaflet,
+    randomForest,
+    rmarkdown
+Suggests:
+    testthat (>= 3.0.0),
     knitr,
-    rmarkdown,
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
+    e1071
 VignetteBuilder: knitr
+Config/testthat/edition: 3
