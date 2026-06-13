@@ -1,19 +1,68 @@
 ---
-title: "introduction-agroSAR"
+title: "Introduction à agroSAR"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{introduction-agroSAR}
+  %\VignetteIndexEntry{Introduction à agroSAR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+## Installation
+
+```r
+devtools::install_github("ayaelhendaoui-blip/agroSAR")
+library(agroSAR)
+```
+
+## 1. Télécharger les données Sentinel-1
+
+```r
+fichiers <- download_sentinel1(
+  bbox       = c(-5.5, 33.5, -5.0, 34.0),
+  date_start = "2024-03-01",
+  date_end   = "2024-03-31",
+  output_dir = "data-raw/"
 )
 ```
 
-```{r setup}
-library(agroSAR)
+## 2. Importer et prétraiter
+
+```r
+sar    <- import_sar_data(fichiers["VV"], fichiers["VH"])
+sar_db <- convert_to_db(clean_sar_data(sar))
+indices <- calculate_sar_indices(sar_db)
+```
+
+## 3. Humidité du sol depuis SoilGrids
+
+```r
+sol <- get_soilgrids_point(lon = -5.2, lat = 33.7)
+print(sol)
+```
+
+## 4. Estimation par Machine Learning
+
+```r
+# Extraction des features par parcelle
+features <- extract_sar_features(sar_db, parcelles)
+
+# Entraînement du modèle
+modele <- estimate_soil_moisture(features, donnees_terrain, method = "rf")
+
+# Évaluation
+eval <- evaluate_model(modele, features_test, type = "regression")
+print(eval$RMSE)
+```
+
+## 5. Visualisations
+
+```r
+# Carte SAR
+plot_sar_map(sar_db, band = "VV_dB", title = "VV Sentinel-1")
+
+# Série temporelle
+plot_sar_timeseries(ts_data, interactive = TRUE)
+
+# Carte humidité sol interactive
+plot_soil_moisture_map(raster_humidite, parcelles)
 ```
