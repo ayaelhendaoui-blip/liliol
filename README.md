@@ -4,13 +4,68 @@
 [![R-CMD-check](https://github.com/ayaelhendaoui-blip/agroSAR/workflows/R-CMD-check/badge.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]()
 
-Package R pour le suivi agricole par radar Sentinel-1.
+> Package R pour le suivi agricole par télédétection radar Sentinel-1
+
+------------------------------------------------------------------------
 
 ## Installation
 
 ``` r
 devtools::install_github("ayaelhendaoui-blip/agroSAR")
 ```
+
+------------------------------------------------------------------------
+
+## Fonctions principales
+
+| Fonction                   | Description                               |
+|----------------------------|-------------------------------------------|
+| `download_sentinel1()`     | Télécharge les images Sentinel-1 via STAC |
+| `import_sar_data()`        | Importe et recadre les rasters VV/VH      |
+| `convert_to_db()`          | Convertit en décibels                     |
+| `clean_sar_data()`         | Filtre le bruit speckle                   |
+| `calculate_sar_indices()`  | Calcule RVI et ratio VV/VH                |
+| `get_soilgrids_point()`    | Récupère humidité sol depuis SoilGrids    |
+| `estimate_soil_moisture()` | Modèle ML d’estimation humidité           |
+| `classify_crop_stage()`    | Classification des stades culturaux       |
+| `plot_sar_map()`           | Carte radar agricole                      |
+| `plot_sar_timeseries()`    | Série temporelle SAR interactive          |
+
+------------------------------------------------------------------------
+
+## Visualisations
+
+### Évolution temporelle du signal SAR
+
+<figure>
+<img src="man/figures/timeseries_sar.png" alt="Série temporelle SAR" />
+<figcaption aria-hidden="true">Série temporelle SAR</figcaption>
+</figure>
+
+### Distribution du backscatter VV et VH
+
+<figure>
+<img src="man/figures/distribution_backscatter.png"
+alt="Distribution backscatter" />
+<figcaption aria-hidden="true">Distribution backscatter</figcaption>
+</figure>
+
+### Validation du modèle d’humidité du sol
+
+<figure>
+<img src="man/figures/validation_modele.png" alt="Validation modèle" />
+<figcaption aria-hidden="true">Validation modèle</figcaption>
+</figure>
+
+### Importance des variables — Random Forest
+
+<figure>
+<img src="man/figures/importance_variables.png"
+alt="Importance variables" />
+<figcaption aria-hidden="true">Importance variables</figcaption>
+</figure>
+
+------------------------------------------------------------------------
 
 ## Utilisation rapide
 
@@ -26,27 +81,35 @@ fichiers <- download_sentinel1(
 )
 
 # 2. Importer + prétraiter
-sar    <- import_sar_data(fichiers["VV"], fichiers["VH"])
-sar_db <- convert_to_db(clean_sar_data(sar))
+sar     <- import_sar_data(fichiers["VV"], fichiers["VH"])
+sar_db  <- convert_to_db(clean_sar_data(sar))
+indices <- calculate_sar_indices(sar_db)
 
 # 3. Humidité du sol SoilGrids
 sol <- get_soilgrids_point(lon = -5.2, lat = 33.7)
 
-# 4. Carte interactive
-plot_sar_map(sar_db, band = "VV_dB", title = "Sentinel-1 VV — Mars 2024")
+# 4. Modèle ML
+modele <- estimate_soil_moisture(features, terrain, method = "rf")
+eval   <- evaluate_model(modele, test_data, type = "regression")
+
+# 5. Visualisations
+plot_sar_timeseries(ts_data, interactive = TRUE)
+plot_sar_map(sar_db, band = "VV_dB")
+plot_soil_moisture_map(raster_humidite, parcelles)
 ```
 
-## Fonctions principales
+------------------------------------------------------------------------
 
-| Fonction                   | Description                               |
-|----------------------------|-------------------------------------------|
-| `download_sentinel1()`     | Télécharge les images Sentinel-1 via STAC |
-| `import_sar_data()`        | Importe et recadre les rasters VV/VH      |
-| `convert_to_db()`          | Convertit en décibels                     |
-| `clean_sar_data()`         | Filtre le bruit speckle                   |
-| `calculate_sar_indices()`  | Calcule RVI et ratio VV/VH                |
-| `get_soilgrids_point()`    | Récupère l’humidité sol depuis SoilGrids  |
-| `estimate_soil_moisture()` | Modèle ML d’estimation humidité           |
-| `classify_crop_stage()`    | Classification des stades culturaux       |
-| `plot_sar_map()`           | Carte radar agricole                      |
-| `plot_sar_timeseries()`    | Série temporelle SAR interactive          |
+## Structure du package
+
+## Données utilisées
+
+| Source            | Données              | Accès   |
+|-------------------|----------------------|---------|
+| Copernicus / STAC | Sentinel-1 GRD VV/VH | Gratuit |
+| ISRIC SoilGrids   | Humidité sol 0–5 cm  | Gratuit |
+
+## Auteur
+
+**Aya El Hendaoui**  
+Package développé dans le cadre d’un projet de télédétection agricole.
