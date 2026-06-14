@@ -98,7 +98,9 @@ plot_sar_map(sar_db, band = "VV_dB")
 plot_soil_moisture_map(raster_humidite, parcelles)
 ```
 
-------------------------------------------------------------------------
+## Rapport d’analyse complet
+
+## 👉 **[Voir le rapport interactif](https://ayaelhendaoui-blip.github.io/agroSAR/)**
 
 ## Structure du package
 

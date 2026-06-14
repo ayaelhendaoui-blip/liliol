@@ -16,7 +16,6 @@ Description: Package R permettant d'importer des images radar Sentinel-1,
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
 URL: https://github.com/ayaelhendaoui-blip/agroSAR
 BugReports: https://github.com/ayaelhendaoui-blip/agroSAR/issues
 Depends:
@@ -40,3 +39,4 @@ Suggests:
     e1071
 VignetteBuilder: knitr
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0
