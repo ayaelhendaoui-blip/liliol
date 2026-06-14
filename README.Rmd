@@ -90,6 +90,20 @@ plot_soil_moisture_map(raster_humidite, parcelles)
 
 👉 **[Voir le rapport interactif](https://ayaelhendaoui-blip.github.io/agroSAR/)**
 ---
+## Données d'exemple
+
+| Fichier | Description | Source |
+|---------|-------------|--------|
+| `data-raw/sar_example.csv` | Exemple données SAR VV/VH | Sentinel-1 |
+| `data-raw/soil_moisture_soilgrids.csv` | Humidité sol réelle | SoilGrids ISRIC |
+
+```r
+# Charger les données d'exemple
+library(agroSAR)
+data(sar_example)
+head(sar_example)
+```
+
 
 ## Structure du package
 
